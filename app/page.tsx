@@ -1,3 +1,9 @@
+import SplashScreen from "@/src/components/shared/SplashScreen";
+
 export default function Home() {
-  return <h1>Habit tracker</h1>;
+  return (
+    <main>
+      <SplashScreen />
+    </main>
+  );
 }

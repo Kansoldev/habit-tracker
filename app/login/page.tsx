@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useRef } from "react";
 import Logo from "@/src/components/ui/Logo";
 import BgGradient from "@/src/components/ui/BgGradient";
@@ -131,6 +132,15 @@ function Page() {
             </button>
           </div>
         </form>
+
+        <div className="px-6 text-center z-10">
+          <p className="text-[#6b7280] text-sm">
+            Don't have an account?{" "}
+            <Link href="#" className="text-[#c4b5fd] font-semibold">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </section>
     </main>
   );

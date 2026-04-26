@@ -29,9 +29,12 @@ export default function SplashScreen() {
           Login
         </Link>
 
-        <button className="w-full py-4 rounded-lg bg-[#1c1c24] border border-[#2d2d38] text-[#c4b5fd] font-semibold text-base active:scale-[0.98] transition-transform cursor-pointer">
+        <Link
+          href="/signup"
+          className="w-full py-4 rounded-lg bg-[#1c1c24] border border-[#2d2d38] text-[#c4b5fd] font-semibold text-base active:scale-[0.98] transition-transform cursor-pointer text-center"
+        >
           Sign up
-        </button>
+        </Link>
       </div>
     </section>
   );

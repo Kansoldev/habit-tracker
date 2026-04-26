@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "../ui/Logo";
 
 export default function SplashScreen() {
@@ -22,9 +23,12 @@ export default function SplashScreen() {
       </div>
 
       <div className="flex flex-col gap-5 w-full max-w-sm z-10">
-        <button className="w-full py-4 rounded-lg bg-linear-to-r from-[#7c3aed] to-[#6d28d9] text-white font-semibold text-base shadow-lg active:scale-[0.98] transition-transform cursor-pointer">
+        <Link
+          href="/login"
+          className="w-full py-4 rounded-lg bg-linear-to-r from-[#7c3aed] to-[#6d28d9] text-white font-semibold text-base shadow-lg active:scale-[0.98] transition-transform cursor-pointer text-center"
+        >
           Login
-        </button>
+        </Link>
 
         <button className="w-full py-4 rounded-lg bg-[#1c1c24] border border-[#2d2d38] text-[#c4b5fd] font-semibold text-base active:scale-[0.98] transition-transform cursor-pointer">
           Sign up

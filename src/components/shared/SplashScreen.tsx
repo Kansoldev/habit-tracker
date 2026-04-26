@@ -1,4 +1,4 @@
-import { Activity } from "lucide-react";
+import Logo from "../ui/Logo";
 
 export default function SplashScreen() {
   return (
@@ -8,9 +8,7 @@ export default function SplashScreen() {
       <div />
 
       <div className="flex flex-col items-center gap-6 z-10">
-        <div className="w-24 h-24 rounded-[28px] bg-linear-to-br from-[#7c3aed] to-[#06b6d4] flex items-center justify-center shadow-2xl">
-          <Activity size={45} className="text-white" />
-        </div>
+        <Logo />
 
         <div className="text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight">

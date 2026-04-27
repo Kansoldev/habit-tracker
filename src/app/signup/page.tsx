@@ -31,9 +31,13 @@ function Page() {
         <form className="lg:w-1/3">
           <div className="flex flex-col gap-7">
             <div>
-              <label className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest">
+              <label
+                htmlFor="email"
+                className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest"
+              >
                 Email
               </label>
+
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b7280]">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -53,8 +57,10 @@ function Page() {
                     />
                   </svg>
                 </span>
+
                 <input
                   type="email"
+                  id="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -64,7 +70,10 @@ function Page() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest">
+              <label
+                htmlFor="password"
+                className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest"
+              >
                 Password
               </label>
 
@@ -91,6 +100,7 @@ function Page() {
 
                 <input
                   type={showPassword ? "text" : "password"}
+                  id="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

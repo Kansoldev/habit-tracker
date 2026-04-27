@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import Logo from "@/src/components/ui/Logo";
-import BgGradient from "@/src/components/ui/BgGradient";
+import Logo from "@/components/ui/Logo";
+import BgGradient from "@/components/ui/BgGradient";
 
 function Page() {
   const [email, setEmail] = useState("");

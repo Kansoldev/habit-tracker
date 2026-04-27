@@ -1,4 +1,4 @@
-import SplashScreen from "@/src/components/shared/SplashScreen";
+import SplashScreen from "@/components/shared/SplashScreen";
 
 export default function Home() {
   return (

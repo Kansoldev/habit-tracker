@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Logo from "@/src/components/ui/Logo";
+import BgGradient from "@/src/components/ui/BgGradient";
 
 function Page() {
   const [fullName, setFullName] = useState("");
@@ -14,9 +15,7 @@ function Page() {
   return (
     <main>
       <section className="min-h-screen flex flex-col items-center justify-center gap-8 bg-[#0f0f13] px-6 py-14 relative overflow-hidden">
-        <div className="absolute -top-20 -left-20 w-85 h-85 rounded-full bg-[#7c3aed] opacity-20 blur-[100px] pointer-events-none" />
-        <div className="absolute -bottom-15 -right-15 w-70 h-70 rounded-full bg-[#06b6d4] opacity-15 blur-[90px] pointer-events-none" />
-        <div />
+        <BgGradient />
 
         <div className="flex flex-col items-center gap-6 z-10">
           <Logo />
@@ -32,40 +31,6 @@ function Page() {
 
         <form className="lg:w-1/3">
           <div className="flex flex-col gap-7">
-            <div>
-              <label className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest">
-                Full Name
-              </label>
-
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b7280]">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle
-                      cx="9"
-                      cy="5.5"
-                      r="3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M2 16c0-3.314 3.134-6 7-6s7 2.686 7 6"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-
-                <input
-                  type="text"
-                  placeholder="Jane Doe"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-[#1c1c24] border border-[#2d2d38] rounded-xl pl-10 pr-4 py-3.5 text-white placeholder:text-[#4b4b5a] text-sm focus:outline-none focus:border-[#7c3aed] transition-colors"
-                />
-              </div>
-            </div>
-
             <div>
               <label className="block text-xs font-medium text-[#9ca3af] mb-1.5 uppercase tracking-widest">
                 Email

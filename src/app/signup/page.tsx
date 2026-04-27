@@ -7,7 +7,6 @@ import Logo from "@/src/components/ui/Logo";
 import BgGradient from "@/src/components/ui/BgGradient";
 
 function Page() {
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

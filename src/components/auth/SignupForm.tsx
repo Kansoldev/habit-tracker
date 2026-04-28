@@ -15,8 +15,8 @@ const SignupForm: React.FC<SignupFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <form className="lg:w-1/3" onSubmit={onSignupSubmit}>
-      <div className="flex flex-col gap-7">
+    <section className="lg:w-1/3">
+      <form onSubmit={onSignupSubmit} className="flex flex-col gap-7">
         <div>
           <label
             htmlFor="email"
@@ -126,8 +126,8 @@ const SignupForm: React.FC<SignupFormProps> = ({
         >
           Create Account
         </button>
-      </div>
-    </form>
+      </form>
+    </section>
   );
 };
 

@@ -7,6 +7,7 @@ import { User, FormErrors } from "@/types/auth";
 import Logo from "@/components/ui/Logo";
 import BgGradient from "@/components/ui/BgGradient";
 import SignupForm from "@/components/auth/SignupForm";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const [email, setEmail] = useState("");
@@ -16,6 +17,8 @@ function Page() {
     email: "",
     password: "",
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -81,16 +84,20 @@ function Page() {
         },
       ]);
 
-      window.localStorage?.setItem(
-        "habit-tracker-session",
-        JSON.stringify({
-          userId: id,
-          email: email,
-        }),
-      );
+      const session = JSON.stringify({
+        userId: id,
+        email: email,
+      });
+
+      window.localStorage?.setItem("habit-tracker-session", session);
+
+      // For middleware requests
+      document.cookie = `session=${encodeURIComponent(session)}; path=/; SameSite=Lax`;
 
       setEmail("");
       setPassword("");
+
+      router.push("/dashboard");
     }
   }
 

@@ -12,22 +12,29 @@ function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [users, setUsers] = useState<User[]>(() => {
-    const currentUsers = window?.localStorage?.getItem("habit-tracker-users");
-
-    if (currentUsers) {
-      return JSON.parse(currentUsers);
-    } else {
-      return [];
-    }
-  });
+  const [users, setUsers] = useState<User[]>([]);
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: "",
     password: "",
   });
 
   useEffect(() => {
-    window?.localStorage?.setItem("habit-tracker-users", JSON.stringify(users));
+    if (typeof window !== "undefined") {
+      const stored_users = localStorage.getItem("habit-tracker-users");
+
+      if (stored_users) {
+        setUsers(JSON.parse(stored_users));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window?.localStorage?.setItem(
+        "habit-tracker-users",
+        JSON.stringify(users),
+      );
+    }
   }, [users]);
 
   function handleSignUpForm(e: React.SubmitEvent) {

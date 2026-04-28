@@ -1,0 +1,16 @@
+export type User = {
+  id: string;
+  email: string;
+  password: string;
+  createdAt: string;
+};
+
+export type Session = {
+  userId: string;
+  email: string;
+};
+
+export type FormErrors = {
+  email: string;
+  password: string;
+};

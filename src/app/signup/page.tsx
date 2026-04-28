@@ -81,6 +81,14 @@ function Page() {
         },
       ]);
 
+      window.localStorage?.setItem(
+        "habit-tracker-session",
+        JSON.stringify({
+          userId: id,
+          email: email,
+        }),
+      );
+
       setEmail("");
       setPassword("");
     }

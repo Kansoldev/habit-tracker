@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Eye, EyeOff } from "lucide-react";
+import { User, FormErrors } from "@/types/auth";
 import Logo from "@/components/ui/Logo";
 import BgGradient from "@/components/ui/BgGradient";
 
@@ -10,6 +12,73 @@ function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [users, setUsers] = useState<User[]>(() => {
+    const currentUsers = window?.localStorage?.getItem("habit-tracker-users");
+
+    if (currentUsers) {
+      return JSON.parse(currentUsers);
+    } else {
+      return [];
+    }
+  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    window?.localStorage?.setItem("habit-tracker-users", JSON.stringify(users));
+  }, [users]);
+
+  function handleSignUpForm(e: React.SubmitEvent) {
+    e.preventDefault();
+
+    let isValid = true;
+    const errors = { email: "", password: "" };
+
+    if (users.length > 0) {
+      const getUser = users.find((user) => user.email === email);
+
+      if (getUser !== undefined) {
+        errors.email = "User already exists";
+        isValid = false;
+      }
+    }
+
+    if (email === "") {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (
+      !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ) {
+      errors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+
+    if (password === "") {
+      errors.password = "Password is required";
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+
+    if (isValid) {
+      const id = uuidv4();
+
+      setUsers((prevUsers) => [
+        ...prevUsers,
+        {
+          id,
+          email,
+          password,
+          createdAt: new Date().toLocaleString(),
+        },
+      ]);
+
+      setEmail("");
+      setPassword("");
+    }
+  }
 
   return (
     <main>
@@ -28,7 +97,7 @@ function Page() {
           </p>
         </div>
 
-        <form className="lg:w-1/3">
+        <form className="lg:w-1/3" onSubmit={handleSignUpForm}>
           <div className="flex flex-col gap-7">
             <div>
               <label
@@ -65,8 +134,15 @@ function Page() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-[#1c1c24] border border-[#2d2d38] rounded-xl pl-10 pr-4 py-3.5 text-white placeholder:text-[#4b4b5a] text-sm focus:outline-none focus:border-[#7c3aed] transition-colors"
+                  data-testid="auth-signup-email"
                 />
               </div>
+
+              {formErrors.email && (
+                <span className="inline-block text-[#ed3548] font-semibold text-sm mt-2">
+                  {formErrors.email}
+                </span>
+              )}
             </div>
 
             <div>
@@ -78,7 +154,7 @@ function Page() {
               </label>
 
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b7280]">
+                <span className="absolute left-4 top-6.25 -translate-y-1/2 text-[#6b7280]">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <rect
                       x="3"
@@ -105,19 +181,31 @@ function Page() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-[#1c1c24] border border-[#2d2d38] rounded-xl pl-10 pr-12 py-3.5 text-white placeholder:text-[#4b4b5a] text-sm focus:outline-none focus:border-[#7c3aed] transition-colors"
+                  data-testid="auth-signup-password"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6b7280] cursor-pointer"
+                  className="absolute right-4 top-6.25 -translate-y-1/2 text-[#6b7280] cursor-pointer"
+                  data-testid="auth-signup-submit"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+
+                {formErrors.password && (
+                  <span className="inline-block text-[#ed3548] font-semibold text-sm mt-2">
+                    {formErrors.password}
+                  </span>
+                )}
               </div>
             </div>
 
-            <button className="w-full py-4 rounded-2xl bg-linear-to-r from-[#7c3aed] to-[#6d28d9] text-white font-semibold text-base shadow-lg active:scale-[0.98] transition-transform cursor-pointer">
+            <button
+              type="submit"
+              className="w-full py-4 rounded-2xl bg-linear-to-r from-[#7c3aed] to-[#6d28d9] text-white font-semibold text-base shadow-lg active:scale-[0.98] transition-transform cursor-pointer"
+              data-testid="auth-signup-submit"
+            >
               Create Account
             </button>
           </div>

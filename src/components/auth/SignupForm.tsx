@@ -1,22 +1,107 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Eye, EyeOff } from "lucide-react";
-import { SignupFormProps } from "@/types/components";
+import { User, FormErrors } from "@/types/auth";
 
-const SignupForm: React.FC<SignupFormProps> = ({
-  email,
-  password,
-  formErrors,
-  onSetEmail,
-  onSetPassword,
-  onSignupSubmit,
-}) => {
+function SignupForm() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: "",
+    password: "",
+  });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored_users = localStorage.getItem("habit-tracker-users");
+
+      if (stored_users) {
+        setUsers(JSON.parse(stored_users));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window?.localStorage?.setItem(
+        "habit-tracker-users",
+        JSON.stringify(users),
+      );
+    }
+  }, [users]);
+
+  function handleSignUpForm(e: React.SubmitEvent) {
+    e.preventDefault();
+
+    let isValid = true;
+    const errors = { email: "", password: "" };
+
+    if (users.length > 0) {
+      const getUser = users.find((user) => user.email === email);
+
+      if (getUser !== undefined) {
+        errors.email = "User already exists";
+        isValid = false;
+      }
+    }
+
+    if (email === "") {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (
+      !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ) {
+      errors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+
+    if (password === "") {
+      errors.password = "Password is required";
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+
+    if (isValid) {
+      const id = uuidv4();
+
+      setUsers((prevUsers) => [
+        ...prevUsers,
+        {
+          id,
+          email,
+          password,
+          createdAt: new Date().toLocaleString(),
+        },
+      ]);
+
+      const session = JSON.stringify({
+        userId: id,
+        email: email,
+      });
+
+      window.localStorage?.setItem("habit-tracker-session", session);
+
+      // For middleware requests
+      document.cookie = `session=${encodeURIComponent(session)}; path=/; SameSite=Lax`;
+
+      setEmail("");
+      setPassword("");
+
+      router.push("/dashboard");
+    }
+  }
 
   return (
     <section className="lg:w-1/3">
-      <form onSubmit={onSignupSubmit} className="flex flex-col gap-7">
+      <form onSubmit={handleSignUpForm} className="flex flex-col gap-7">
         <div>
           <label
             htmlFor="email"
@@ -50,7 +135,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
               id="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => onSetEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#1c1c24] border border-[#2d2d38] rounded-xl pl-10 pr-4 py-3.5 text-white placeholder:text-[#4b4b5a] text-sm focus:outline-none focus:border-[#7c3aed] transition-colors"
               data-testid="auth-signup-email"
             />
@@ -97,7 +182,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
               id="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => onSetPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-[#1c1c24] border border-[#2d2d38] rounded-xl pl-10 pr-12 py-3.5 text-white placeholder:text-[#4b4b5a] text-sm focus:outline-none focus:border-[#7c3aed] transition-colors"
               data-testid="auth-signup-password"
             />
@@ -129,6 +214,6 @@ const SignupForm: React.FC<SignupFormProps> = ({
       </form>
     </section>
   );
-};
+}
 
 export default SignupForm;

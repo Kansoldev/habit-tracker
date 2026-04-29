@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import SignupForm, {
   createSession,
 } from "../../src/components/auth/SignupForm";
+import LoginForm from "../../src/components/auth/LoginForm";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -39,5 +40,24 @@ describe("auth flow", () => {
 
     expect(submitSpy).toHaveBeenCalledOnce();
     expect(createSession("ab123g", "test@gmail.com")).toBe(true);
+  });
+
+  it("submits the login form and stores the active session", async () => {
+    render(<LoginForm />);
+
+    await userEvent.type(screen.getByLabelText(/Email/i), "johndoe@gmail.com");
+    await userEvent.type(screen.getByLabelText(/Password/i), "Password123");
+
+    // Spy on the form's submit event
+    const form = screen.getByLabelText("login-form");
+    const submitSpy = vi.fn();
+    form.addEventListener("submit", submitSpy);
+
+    const submitBtn = screen.getByRole("button", { name: /Login/i });
+
+    await userEvent.click(submitBtn);
+
+    expect(submitSpy).toHaveBeenCalledOnce();
+    expect(createSession("abc123", "test@test.com")).toBe(true);
   });
 });

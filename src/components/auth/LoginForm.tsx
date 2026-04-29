@@ -80,7 +80,7 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleLogin} className="lg:w-1/3">
+    <form onSubmit={handleLogin} className="lg:w-1/3" aria-label="login-form">
       <div className="flex flex-col gap-7">
         <div>
           <label

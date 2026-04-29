@@ -4,7 +4,10 @@ import BgGradient from "../ui/BgGradient";
 
 export default function SplashScreen() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center gap-8 bg-[#0f0f13] px-6 py-14 relative overflow-hidden">
+    <section
+      className="min-h-screen flex flex-col items-center justify-center gap-8 bg-[#0f0f13] px-6 py-14 relative overflow-hidden"
+      data-testid="splash-screen"
+    >
       <BgGradient />
 
       <div className="flex flex-col items-center gap-6 z-10">

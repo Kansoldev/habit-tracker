@@ -1,10 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { FormErrors } from "@/types/auth";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { FormErrors, User } from "@/types/auth";
 import { Eye, EyeOff } from "lucide-react";
 
+export function createSession(id: string, email: string) {
+  if (id === null || email === null) {
+    return false;
+  }
+
+  const session = JSON.stringify({
+    userId: id,
+    email: email,
+  });
+
+  window.localStorage?.setItem("habit-tracker-session", session);
+
+  // For middleware requests
+  document.cookie = `session=${encodeURIComponent(session)}; path=/; SameSite=Lax`;
+
+  return true;
+}
+
 function LoginForm() {
+  const [users, setUsers] = useState<User[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -14,25 +34,46 @@ function LoginForm() {
     containerErr: "",
   });
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored_users = localStorage.getItem("habit-tracker-users");
+
+      if (stored_users) {
+        setUsers(JSON.parse(stored_users));
+      }
+    }
+  }, []);
+
   function handleLogin(e: React.SubmitEvent) {
     e.preventDefault();
 
-    let isValid = true;
     const errors = { email: "", password: "" };
 
     if (email === "") {
       errors.email = "Email is required";
-      isValid = false;
     } else if (
       !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
     ) {
       errors.email = "Please enter a valid email address";
-      isValid = false;
-    }
-
-    if (password === "") {
+    } else if (password === "") {
       errors.password = "Password is required";
-      isValid = false;
+    } else if (!users.some((user) => user.email === email)) {
+      errors.email = "User does not exist";
+    } else if (!users.some((user) => user.password === password)) {
+      errors.password = "Your password is incorrect";
+    } else {
+      const singleUser = users.find((user) => user.email === email);
+
+      if (singleUser?.id && singleUser?.email) {
+        const sessionCreated = createSession(singleUser?.id, singleUser.email);
+
+        if (sessionCreated) {
+          router.push("/dashboard");
+          return false;
+        }
+      }
     }
 
     setFormErrors(errors);

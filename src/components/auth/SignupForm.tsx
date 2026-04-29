@@ -6,6 +6,24 @@ import { v4 as uuidv4 } from "uuid";
 import { Eye, EyeOff } from "lucide-react";
 import { User, FormErrors } from "@/types/auth";
 
+export function createSession(id: string, email: string) {
+  if (id !== "" && email !== "") {
+    const session = JSON.stringify({
+      userId: id,
+      email: email,
+    });
+
+    window.localStorage?.setItem("habit-tracker-session", session);
+
+    // For middleware requests
+    document.cookie = `session=${encodeURIComponent(session)}; path=/; SameSite=Lax`;
+
+    return true;
+  }
+
+  return false;
+}
+
 function SignupForm() {
   const [users, setUsers] = useState<User[]>([]);
   const [email, setEmail] = useState("");
@@ -14,6 +32,7 @@ function SignupForm() {
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: "",
     password: "",
+    containerErr: "",
   });
 
   const router = useRouter();
@@ -82,26 +101,35 @@ function SignupForm() {
         },
       ]);
 
-      const session = JSON.stringify({
-        userId: id,
-        email: email,
+      const sessionCreated = createSession(id, email);
+
+      if (sessionCreated) {
+        router.push("/dashboard");
+        return false;
+      }
+
+      setFormErrors({
+        ...formErrors,
+        email: "",
+        password: "",
+        containerErr: "There was an error creating a session, try again later",
       });
-
-      window.localStorage?.setItem("habit-tracker-session", session);
-
-      // For middleware requests
-      document.cookie = `session=${encodeURIComponent(session)}; path=/; SameSite=Lax`;
-
-      setEmail("");
-      setPassword("");
-
-      router.push("/dashboard");
     }
   }
 
   return (
     <section className="lg:w-1/3">
-      <form onSubmit={handleSignUpForm} className="flex flex-col gap-7">
+      <form
+        onSubmit={handleSignUpForm}
+        className="flex flex-col gap-7"
+        aria-label="signup-form"
+      >
+        {formErrors.containerErr && (
+          <span className="inline-block text-[#ed3548] font-semibold text-sm text-center mt-2">
+            {formErrors.containerErr}
+          </span>
+        )}
+
         <div>
           <label
             htmlFor="email"

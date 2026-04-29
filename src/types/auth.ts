@@ -13,4 +13,5 @@ export type Session = {
 export type FormErrors = {
   email: string;
   password: string;
+  containerErr?: string;
 };
